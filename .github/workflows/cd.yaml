@@ -1,0 +1,46 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v0.1.*'
+      - 'v0.2.*'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - main
+
+jobs:
+  job1:
+    name: job1
+    runs-on: ubuntu-20.04
+    steps:
+
+      - name: Checkout application repository
+        uses: actions/checkout@v2
+
+      - name: Step1
+        run: |
+          env | grep GITHUB | sort
+
+      - name: Step2
+        run: |
+          curl -i -X POST \
+              -H "Authorization: token ${{ secrets.MY_GITHUB_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              --data "{
+                  \"event_type\": \"type1\",
+                  \"client_payload\": {
+                      \"triggered_by\": {
+                          \"github_workflow\": \"$GITHUB_WORKFLOW\",
+                          \"github_run_id\": \"$GITHUB_RUN_ID\",
+                          \"github_run_number\": \"$GITHUB_RUN_NUMBER\"
+                      }
+                  }
+              }" \
+              https://api.github.com/repos/app1/dispatches
