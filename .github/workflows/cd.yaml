@@ -43,4 +43,4 @@ jobs:
                       }
                   }
               }" \
-              https://api.github.com/repos/app1/dispatches
+              https://api.github.com/repos/akonokhov/app1/dispatches
